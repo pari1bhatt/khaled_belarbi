@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1052050942023",
+    "project_id": "flutter-maps-342218",
+    "storage_bucket": "flutter-maps-342218.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052050942023:android:5652fedc5162afbf7da962",
+        "android_client_info": {
+          "package_name": "com.khaled_belarbi.khaled_belarbi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052050942023-3bjk84tuausr6r9a15kj16i08ufahe1d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq20SaTyvGaKLQvTRZ9WCdEbGTr1IfbmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052050942023-3bjk84tuausr6r9a15kj16i08ufahe1d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
