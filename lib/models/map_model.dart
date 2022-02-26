@@ -1,49 +1,30 @@
-class LatLong {
-  final double? lat;
-  final double? lng;
-  LatLong({required this.lat, required this.lng});
 
-  factory LatLong.fromJson(Map<String, dynamic> json) {
-    return LatLong(
-      lat: json['lat'] as double,
-      lng: json['lng'] as double,
-    );
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['lat'] = lat;
-    data['lng'] = lng;
-    return data;
-  }
-}
+class ImageDataModel {
+    String? lat;
+    String? lng;
+    String? path;
+    String? uploaded_by;
+    String? url;
 
+    ImageDataModel({this.lat, this.lng, this.path, this.uploaded_by, this.url});
 
-class Region {
-  final LatLong coords;
-  final String id;
-  final String name;
-  final double zoom;
-  Region({
-    required this.coords,
-    required this.id,
-    required this.name,
-    required this.zoom,
-  });
+    factory ImageDataModel.fromJson(Map<String, dynamic> json) {
+        return ImageDataModel(
+            lat: json['lat'],
+            lng: json['lng'],
+            path: json['path'],
+            uploaded_by: json['uploaded_by'],
+            url: json['url'],
+        );
+    }
 
-  factory Region.fromJson(Map<String, dynamic> json) {
-    return Region(
-      coords: json['coords'] as LatLong,
-      id: json['id'] ?? "",
-      name: json['name'] ?? "",
-      zoom: json['zoom'],
-    );
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['coords'] = coords;
-    data['id'] = id;
-    data['name'] = name;
-    data['zoom'] = zoom;
-    return data;
-  }
+    Map<String, dynamic> toJson() {
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['lat'] = this.lat;
+        data['lng'] = this.lng;
+        data['path'] = this.path;
+        data['uploaded_by'] = this.uploaded_by;
+        data['url'] = this.url;
+        return data;
+    }
 }

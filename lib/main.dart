@@ -9,6 +9,8 @@ import 'package:khaled_belarbi/map_page.dart';
 import 'package:location/location.dart';
 import 'package:path/path.dart' as path;
 
+import 'models/map_model.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -42,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   FirebaseStorage storage = FirebaseStorage.instance;
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
+  List<ImageDataModel>? _imageDataList = [];
 
   @override
   void initState() {
@@ -71,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
         return;
       }
     }
-
   }
 
   @override
@@ -81,7 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         actions: [
           ElevatedButton.icon(
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const MapPage())),
+              onPressed: () {
+                if (_imageDataList!.isNotEmpty) {
+                  Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (context) => MapPage(imageDataModel: _imageDataList!)));
+                } else {
+                  _showSnackBar("No data!");
+                }
+              },
               icon: const Icon(Icons.map),
               label: const Text('Map View'))
         ],
@@ -115,6 +125,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MapPage(lat: image['lat'], lng: image['lng'])));
+                          },
                           dense: false,
                           leading: Image.network(image['url']),
                           title: Text("Lat: ${image['lat']}"),
@@ -146,6 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
   // This function is called when the app launches for the first time or when an image is uploaded or deleted
   Future<List<Map<String, dynamic>>> _loadImages() async {
     List<Map<String, dynamic>> files = [];
+    List<ImageDataModel>? imageDataList = [];
+    _imageDataList = [];
 
     final ListResult result = await storage.ref().list();
     final List<Reference> allFiles = result.items;
@@ -153,16 +172,21 @@ class _MyHomePageState extends State<MyHomePage> {
     await Future.forEach<Reference>(allFiles, (file) async {
       final String fileUrl = await file.getDownloadURL();
       final FullMetadata fileMeta = await file.getMetadata();
-      files.add({
+      Map<String, dynamic> a = {
         "url": fileUrl,
         "path": file.fullPath,
         "uploaded_by": fileMeta.customMetadata?['uploaded_by'] ?? 'Nobody',
         "lat": fileMeta.customMetadata?['lat'] ?? '',
         "lng": fileMeta.customMetadata?['lng'] ?? '',
         // "description": fileMeta.customMetadata?['description'] ?? 'No description'
-      });
+      };
+      files.add(a);
+      imageDataList.add(ImageDataModel.fromJson(a));
     });
-
+    _imageDataList = imageDataList;
+    // print("imageDataModel.length ${imageDataList}");
+    // print("files.length ${files}");
+    // print("final ${imageDataList}");
     return files;
   }
 
@@ -187,8 +211,9 @@ class _MyHomePageState extends State<MyHomePage> {
             imageFile,
             SettableMetadata(customMetadata: {
               'uploaded_by': 'Some guy',
-              'lat': _locationData.latitude.toString(),
-              'lng': _locationData.longitude.toString()
+              // 'lat': _locationData.latitude.toString(),
+              'lat': "22.728392",
+              'lng': "71.637077"
             }));
 
         // Refresh the UI
@@ -204,7 +229,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
   }
-
 
   // Delete the selected image
   // This function is called when a trash icon is pressed
